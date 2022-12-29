@@ -39,14 +39,10 @@ fib(n) do var r1, r2, i, t;
 	return r2;
 end 
 
-do var i,j, b::3;
+do var i;
 	for (i=1, 11) do
 		writes(ntoa(fib(i)));
 		writes("\n");
 	end
-
-	t.read(0,b,2);
-	writes(b);
-	writes("\n");
 end
 

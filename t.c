@@ -1,11 +1,6 @@
 /*
  * T3X9 -> ELF-Linux-386 compiler
- * Kyoung, 2022, CC0 license
- * https://creativecommons.org/publicdomain/zero/1.0/
- */
-
-/*
- * T3X9 -> ELF-FreeBSD-386 compiler
+ * Kyoung, 2022
  * Nils M Holm, 2017, CC0 license
  * https://creativecommons.org/publicdomain/zero/1.0/
  */
@@ -220,9 +215,9 @@ int	Loaded = 0;
 #define CG_WORD		",w"
 
 #define CG_P_READ \
-	"8b5424048b4c24088b5c240cb803000000cd80c3"
+	"5251538b5424108b4c24148b5c2418b803000000cd805b595ac3"
 #define CG_P_WRITE \
-	"8b5424048b4c24088b5c240cb804000000cd80c3"
+	"5251538b5424108b4c24148b5c2418b804000000cd805b595ac3"
 #define CG_P_MEMCOMP \
  "8b74240c8b7c24088b4c240441fcf3a609c90f850300000031c0c38a46ff2a47ff66986699c3"
 #define CG_P_MEMCOPY \
@@ -391,42 +386,44 @@ void lewrite(int x) {
 	fputc(x>>24 & 0xff, stdout);
 }
 
+#define DS_OFFSET	(HEADER_SIZE + Tp) % PAGE_SIZE
+
 void elfheader(void) {
-	hexwrite("7f454c46");		/* magic */
-	hexwrite("01");			/* 32-bit */
-	hexwrite("01");			/* little endian */
-	hexwrite("01");			/* header version */
-	hexwrite("00");			/* FreeBSD ABI */
-	hexwrite("0000000000000000");	/* padding */
-	hexwrite("0200");		/* executable */
-	hexwrite("0300");		/* 386 */
-	lewrite(1);			/* version */
-	lewrite(TEXT_VADDR+HEADER_SIZE);/* initial entry point */
-	lewrite(0x34);			/* program header offset */
-	lewrite(0);			/* no header segments */
-	lewrite(0);			/* flags */
-	hexwrite("3400");		/* header size */
-	hexwrite("2000");		/* program header size */
-	hexwrite("0200");		/* number of program headers */
-	hexwrite("0000");		/* segment header size (unused) */
-	hexwrite("0000");		/* number of segment headers */
-	hexwrite("0000");		/* string index (unused) */
-	lewrite(0x01);			/* loadable segment */
-	lewrite(0x00);			/* offset in file */
-	lewrite(TEXT_VADDR);		/* virtual load address */
-	lewrite(TEXT_VADDR);		/* physical load address */
-	lewrite(HEADER_SIZE+Tp);	/* size in file */
-	lewrite(HEADER_SIZE+Tp);	/* size in memory */
-	lewrite(0x05);			/* flags = read, execute */
-	lewrite(PAGE_SIZE);		/* alignment (page) */
-	lewrite(0x01);			/* loadable segment */
-	lewrite(PAGE_SIZE);		/* offset in file */
-	lewrite(DATA_VADDR);		/* virtual load address */
-	lewrite(DATA_VADDR);		/* physical load address */
-	lewrite(Dp);			/* size in file */
-	lewrite(Dp);			/* size in memory */
-	lewrite(0x06);			/* flags = read, write */
-	lewrite(PAGE_SIZE);		/* alignment (page) */
+	hexwrite("7f454c46");			/* magic */
+	hexwrite("01");				/* 32-bit */
+	hexwrite("01");				/* little endian */
+	hexwrite("01");				/* header version */
+	hexwrite("00");				/* FreeBSD ABI */
+	hexwrite("0000000000000000");		/* padding */
+	hexwrite("0200");			/* executable */
+	hexwrite("0300");			/* 386 */
+	lewrite(1);				/* version */
+	lewrite(TEXT_VADDR+HEADER_SIZE);	/* initial entry point */
+	lewrite(0x34);				/* program header offset */
+	lewrite(0);				/* no header segments */
+	lewrite(0);				/* flags */
+	hexwrite("3400");			/* header size */
+	hexwrite("2000");			/* program header size */
+	hexwrite("0200");			/* number of program headers */
+	hexwrite("0000");			/* segment header size (unused) */
+	hexwrite("0000");			/* number of segment headers */
+	hexwrite("0000");			/* string index (unused) */
+	lewrite(0x01);				/* loadable segment */
+	lewrite(HEADER_SIZE);			/* offset in file */
+	lewrite(TEXT_VADDR+HEADER_SIZE);	/* virtual load address */
+	lewrite(TEXT_VADDR+HEADER_SIZE);	/* physical load address */
+	lewrite(Tp);				/* size in file */
+	lewrite(Tp);				/* size in memory */
+	lewrite(0x05);				/* flags = read, execute */
+	lewrite(PAGE_SIZE);			/* alignment (page) */
+	lewrite(0x01);				/* loadable segment */
+	lewrite(HEADER_SIZE+Tp);		/* offset in file */
+	lewrite(DATA_VADDR+DS_OFFSET);		/* virtual load address */
+	lewrite(DATA_VADDR+DS_OFFSET);		/* physical load address */
+	lewrite(Dp);				/* size in file */
+	lewrite(Dp);				/* size in memory */
+	lewrite(0x06);				/* flags = read, write */
+	lewrite(PAGE_SIZE);			/* alignment (page) */
 }
 
 /*
@@ -1563,7 +1560,6 @@ int main(void) {
 	resolve();
 	elfheader();
 	fwrite(Text, Tp, 1, stdout);
-	for (int i = 0; i < PAGE_SIZE ; i++) fputc(0, stdout);
 	fwrite(Data, Dp, 1, stdout);
 	return 0;
 }
