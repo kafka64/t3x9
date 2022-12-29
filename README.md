@@ -8,6 +8,9 @@ I will document gotchas I had to deal with while porting and other points of int
 
 ## TODO
 [x] ABI compatibility with the Linux operating system.
+
 [ ] T-Code VM bootstrapping compiler image.
+
 [ ] Reach feature parity with T3X9 and pass its test suite.
+
 [ ] Language enhancement : closure? pattern matching?
