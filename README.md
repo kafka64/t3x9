@@ -13,4 +13,6 @@ I will document gotchas I had to deal with while porting and other points of int
 
 - [ ] Reach feature parity with T3X9 and pass its test suite.
 
-- [ ] Language enhancement : closure? pattern matching?
+- [ ] Language enhancement 
+  - [ ] closure? 
+  - [ ] pattern matching?
