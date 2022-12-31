@@ -1481,7 +1481,7 @@ init() do var i, tread, twrite, tcomp, tcopy, tfill, tscan;
 		[ CG_FORDOWN,	"5b39c30f8e,>"		],
 		[ CG_ENTER,	"5589e5"		],
 		[ CG_EXIT,	"5dc3"			],
-		[ CG_HALT,	"68,w5031c040cd80"	],
+		[ CG_HALT,	"bb,w31c040cd80"	],
 		[ CG_NEG,	"f7d8"			],
 		[ CG_INV,	"f7d0"			],
 		[ CG_LOGNOT,	"f7d819c0f7d0"		],
