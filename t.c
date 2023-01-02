@@ -395,7 +395,7 @@ void elfheader(void) {
 	hexwrite("01");				/* 32-bit */
 	hexwrite("01");				/* little endian */
 	hexwrite("01");				/* header version */
-	hexwrite("00");				/* FreeBSD ABI */
+	hexwrite("00");				/* System V ABI */
 	hexwrite("0000000000000000");		/* padding */
 	hexwrite("0200");			/* executable */
 	hexwrite("0300");			/* 386 */
