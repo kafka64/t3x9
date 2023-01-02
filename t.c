@@ -387,6 +387,7 @@ void lewrite(int x) {
 	fputc(x>>24 & 0xff, stdout);
 }
 
+// ({Virt,Phys}Addr - Offset) % PageSize == 0
 #define DS_OFFSET	(HEADER_SIZE + Tp) % PAGE_SIZE
 
 void elfheader(void) {
